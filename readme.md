@@ -25,8 +25,20 @@ untuk siapa, masalah apa yang diselesaikan.
 
 ## 🏗️ Architecture
 
-```
-[React Frontend] <--HTTP--> [FastAPI Backend] <--SQL--> [PostgreSQL]
+```mermaid
+flowchart TD
+    A[Frontend React / Vue :5173] -->|HTTP JSON| B[FastAPI — main.py CORS · JWT Middleware]
+
+    B --> C[Auth Login · Register · JWT]
+    B --> D[Finance Income · Expense]
+    B --> E[Letter Draft · Status]
+
+    C --> F[crud.py + auth.py ORM Operations · JWT Encode/Decode]
+    D --> F
+    E --> F
+
+    F --> G[SQLAlchemy ORM User · Transaction · Letter]
+    G --> H[(PostgreSQL sikasi_app)]
 ```
 
 *(Diagram ini akan berkembang setiap minggu)*
