@@ -120,7 +120,6 @@ cc-kelompok-6/
 │
 ├── .gitignore                   # File untuk mengabaikan file tertentu dalam Git
 ├── README.md                    # Dokumentasi utama proyek
-└── docker-compose.yml           # Konfigurasi untuk menjalankan aplikasi dengan Docker
 ```
 
 ### Penjelasan Struktur Proyek:
@@ -128,7 +127,6 @@ cc-kelompok-6/
 - Frontend: Folder ini berisi kode untuk tampilan aplikasi yang dibangun menggunakan React. Semua komponen, styling, dan logika tampilan berada di dalam folder src. package.json digunakan untuk mengelola dependensi frontend, dan vite.config.js adalah konfigurasi untuk build aplikasi.
 - Docs: Folder ini berisi dokumentasi anggota tim dan deskripsi tentang proyek, termasuk README.md yang menjelaskan keseluruhan aplikasi serta langkah-langkah pengembangan dan penggunaan.
 - .gitignore: Menentukan file-file yang tidak perlu dipantau oleh Git, seperti file konfigurasi lokal atau file build.
-- docker-compose.yml: Digunakan untuk mengonfigurasi dan menjalankan aplikasi menggunakan Docker sehingga lingkungan pengembangan dapat dipastikan konsisten antara tim.
 
 Ini adalah gambaran umum dari struktur proyek yang dapat membantu dalam memahami pengorganisasian dan alur kerja proyek SIKASI.
 
