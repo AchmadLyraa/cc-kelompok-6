@@ -152,8 +152,7 @@ def create_transaction_endpoint(transaction: TransactionCreate, user: User = Dep
         "user_id": trans.user_id,
         "type": trans.type,
         "amount": trans.amount,
-        "description": trans.description,
-        "date": trans.date
+        "description": trans.description
     }
 
 
@@ -169,8 +168,7 @@ def get_transactions(skip: int = 0, limit: int = 10, user: User = Depends(get_cu
                 "id": t.id,
                 "type": t.type,
                 "amount": t.amount,
-                "description": t.description,
-                "date": t.date
+                "description": t.description
             } for t in transactions
         ],
         "summary": {
