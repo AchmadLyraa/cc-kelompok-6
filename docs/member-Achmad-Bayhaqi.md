@@ -1,1 +1,1 @@
-Nama: Achmad Bayhaqi | NIM: 10231001 | Peran: Backend
+Nama: Achmad Bayhaqi | NIM: 10231001 | Peran: Lead Backend
