@@ -55,7 +55,7 @@ bash
 
 
 ### Frontend (React)
-bash
+```bash
 1. Masuk ke folder frontend
    cd frontend
 
@@ -67,6 +67,7 @@ bash
 
 4. Akses frontend di browser
    http://localhost:5173
+```
 
 ## 📅 Roadmap
 
