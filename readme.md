@@ -15,14 +15,14 @@ Aplikasi ini ditujukan bagi seluruh pengurus HMSI untuk mendukung transparansi, 
 
 ## 🛠️ Tech Stack
 
-| Teknologi | Fungsi |
-|-----------|--------|
-| FastAPI   | Backend REST API |
-| React     | Frontend SPA |
-| PostgreSQL | Database |
-| Docker    | Containerization |
-| GitHub Actions | CI/CD |
-| Railway/Render | Cloud Deployment |
+| Teknologi | Fungsi | Keterangan |
+|-----------|--------|------------|
+| FastAPI   | Backend REST API | Membangun dan menyediakan endpoint API yang menangani proses bisnis, validasi data, dan komunikasi dengan database |
+| React     | Frontend SPA | Membangun tampilan antarmuka pengguna yang interaktif dan mengonsumsi data dari backend API |
+| PostgreSQL | Database | Menyimpan, mengelola, dan mengambil data aplikasi secara terstruktur |
+| Docker    | Containerization | Menjalankan aplikasi dalam container agar environment development dan production tetap konsisten |
+| GitHub Actions | CI/CD | Melakukan otomatisasi proses pembangunan aplikasi, pengujian, serta penerapan sistem setiap kali terjadi perubahan pada kode |
+| Railway/Render | Cloud Deployment | Layanan cloud untuk mendistribusikan dan menjalankan aplikasi pada server secara online |
 
 ## 🏗️ Architecture
 
@@ -35,39 +35,46 @@ Aplikasi ini ditujukan bagi seluruh pengurus HMSI untuk mendukung transparansi, 
 ## 🚀 Getting Started
 
 ### Prasyarat
-- Python 3.10+
-- Node.js 18+
-- Git
+* Python 3.10+
+* Node.js 18+ & npm
+* Git
+* PostgreSQL 14+
 
-### Backend (FastAPI)
-bash
-1. Masuk ke folder backend
-   cd backend
-
-2. Install dependencies
-   pip install -r requirements.txt
-
-3. Jalankan server
-   uvicorn main:app --reload --port 8000
-
-4. Akses backend di browser
-   http://localhost:8000
-
-
-### Frontend (React)
+### Setup Backend
 ```bash
-1. Masuk ke folder frontend
-   cd frontend
 
-2. Install dependencies
-   npm install
+# Masuk ke Folder Backend
+cd backend
 
-3. Jalankan aplikasi
-   npm run dev
+# Install Dependencies
+pip install -r requirements.txt
 
-4. Akses frontend di browser
-   http://localhost:5173
+# Menjalankan Server Backend 
+uvicorn main:app --reload --port 8000
+
+# Backend Berjalan Di : http://localhost:8000
+
+# Menjalankan Swagger UI Di : http://localhost:8000/docs
 ```
+
+Backend berhasil menampilkan pesan {"message":"Hello from Sikasi App API!","status":"running","version":"0.1.0"} di browser  http://localhost:8000 dan backend juga berhasil menampilkan dokumentasi API otomatis di http://localhost:8000/docs (Swagger UI)
+
+### Setup Frontend
+```bash
+
+# Masuk ke Folder Frondend
+cd frontend
+
+# Install Node Modules (Dependencies)
+npm install
+
+# Menjalankan Aplikasi Frontend (Development Mode)
+npm run dev
+
+# Frontend Berjalan Di : http://localhost:5173
+```
+
+Frontend berhasil menampilkan data dari backend API → koneksi full-stack
 
 ## 📅 Roadmap
 
