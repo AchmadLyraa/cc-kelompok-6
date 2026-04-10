@@ -20,7 +20,7 @@ app.add_middleware(
 @app.get("/")
 def root():
     return {
-        "message": "Hello from Cloud App API!",
+        "message": "Hello from Sikasi App API!",
         "status": "running",
         "version": "0.1.0"
     }
@@ -36,10 +36,10 @@ def team_info():
     return {
         "team": "cloud-team-XX",
         "members": [
-            # TODO: Isi dengan data tim Anda
-            {"name": "Nama 1", "nim": "NIM1", "role": "Lead Backend"},
-            {"name": "Nama 2", "nim": "NIM2", "role": "Lead Frontend"},
-            {"name": "Nama 3", "nim": "NIM3", "role": "Lead DevOps"},
-            {"name": "Nama 4", "nim": "NIM4", "role": "Lead QA & Docs"},
-        ]
+            {"name": "Achmad Bayhaqi", "nim": "10231001", "role": "Lead Backend"},
+            {"name": "Indah Nur Fortuna", "nim": "10231044", "role": "Lead Frontend"},
+            {"name": "Alfiani Dwiyuniarti", "nim": "10231010", "role": "Lead DevOps"},
+            {"name": "Zahwa Hanna Dwi Putri", "nim": "10231092", "role": "Lead CI/CD dan Deploy"},
+            {"name": "Nilam Ayu NandaStari Romdoni", "nim": "10231070", "role": "Lead QA & Docs"},
+        ],
     }
