@@ -3,7 +3,11 @@ import { userAPI } from "../services/api";
 
 const formatDate = (dateString) => {
   try {
+    if (!dateString) return "N/A";
     const date = new Date(dateString);
+    // Cek jika date invalid
+    if (isNaN(date.getTime())) return "N/A";
+
     return date.toLocaleDateString("en-US", {
       year: "numeric",
       month: "short",
@@ -12,386 +16,266 @@ const formatDate = (dateString) => {
       minute: "2-digit",
     });
   } catch (e) {
-    return dateString || "N/A";
+    return "N/A";
   }
 };
 
 const styles = {
   container: {
-    maxWidth: "1200px",
-    margin: "0 auto",
+    maxWidth: "1100px",
+    margin: "40px auto",
     padding: "20px",
+    fontFamily: "'Inter', system-ui, sans-serif",
+    backgroundColor: "#f8fafc",
+    minHeight: "100vh",
   },
   header: {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: "30px",
+    marginBottom: "32px",
   },
   title: {
     fontSize: "28px",
-    fontWeight: "bold",
-    color: "#333",
+    fontWeight: "800",
+    color: "#1e293b",
+    margin: 0,
+    letterSpacing: "-0.025em",
   },
-  button: {
-    padding: "10px 20px",
-    backgroundColor: "#4CAF50",
-    color: "white",
-    border: "none",
-    borderRadius: "4px",
-    cursor: "pointer",
-    fontSize: "14px",
-    fontWeight: "bold",
-  },
-  form: {
-    backgroundColor: "#f9f9f9",
+  // --- FILTER BAR FIXED ---
+  filterBar: {
+    display: "flex",
+    flexWrap: "wrap",
+    gap: "12px",
+    alignItems: "center",
+    marginBottom: "24px",
     padding: "20px",
-    borderRadius: "8px",
-    marginBottom: "30px",
-    display: "none",
+    backgroundColor: "white",
+    borderRadius: "16px",
+    boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.05)",
+    border: "1px solid #e2e8f0",
   },
-  formActive: {
-    display: "block",
-  },
-  formGroup: {
-    marginBottom: "15px",
-  },
-  label: {
-    display: "block",
-    marginBottom: "5px",
-    fontWeight: "bold",
-    color: "#333",
-  },
-  input: {
-    width: "100%",
-    padding: "10px",
-    border: "1px solid #ddd",
-    borderRadius: "4px",
+  filterInput: {
+    padding: "10px 16px",
+    borderRadius: "10px",
+    border: "1px solid #cbd5e1",
     fontSize: "14px",
-    boxSizing: "border-box",
+    flex: "2",
+    minWidth: "250px",
+    outline: "none",
+    backgroundColor: "#ffffff", // Pastikan putih
+    color: "#1e293b", // Pastikan teks gelap
+    transition: "border-color 0.2s",
   },
-  select: {
-    width: "100%",
-    padding: "10px",
-    border: "1px solid #ddd",
-    borderRadius: "4px",
+  filterSelect: {
+    padding: "10px 16px",
+    borderRadius: "10px",
+    border: "1px solid #cbd5e1",
     fontSize: "14px",
-    boxSizing: "border-box",
-  },
-  submitButton: {
-    backgroundColor: "#4CAF50",
-    color: "white",
-    padding: "10px 20px",
-    border: "none",
-    borderRadius: "4px",
+    backgroundColor: "#ffffff",
+    color: "#1e293b",
     cursor: "pointer",
-    fontWeight: "bold",
-    marginRight: "10px",
+    flex: "1",
+    minWidth: "160px",
+    outline: "none",
   },
-  cancelButton: {
-    backgroundColor: "#f44336",
-    color: "white",
+  resetButton: {
     padding: "10px 20px",
+    backgroundColor: "#f1f5f9",
+    color: "#475569",
     border: "none",
-    borderRadius: "4px",
+    borderRadius: "10px",
     cursor: "pointer",
-    fontWeight: "bold",
+    fontSize: "14px",
+    fontWeight: "600",
+    transition: "background 0.2s",
+  },
+  // --- END FILTER BAR ---
+  button: {
+    padding: "12px 24px",
+    backgroundColor: "#4f46e5",
+    color: "white",
+    border: "none",
+    borderRadius: "10px",
+    cursor: "pointer",
+    fontSize: "14px",
+    fontWeight: "600",
+    boxShadow: "0 4px 6px -1px rgba(79, 70, 229, 0.3)",
+  },
+  tableCard: {
+    backgroundColor: "white",
+    borderRadius: "16px",
+    overflow: "hidden",
+    boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.05)",
+    border: "1px solid #e2e8f0",
   },
   table: {
     width: "100%",
     borderCollapse: "collapse",
-    backgroundColor: "white",
-    boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
   },
   th: {
-    backgroundColor: "#f5f5f5",
-    padding: "12px",
+    backgroundColor: "#f8fafc",
+    padding: "16px",
     textAlign: "left",
-    fontWeight: "bold",
-    borderBottom: "2px solid #ddd",
+    fontWeight: "600",
+    color: "#64748b",
+    fontSize: "12px",
+    textTransform: "uppercase",
+    letterSpacing: "0.05em",
+    borderBottom: "1px solid #e2e8f0",
   },
   td: {
-    padding: "12px",
-    borderBottom: "1px solid #ddd",
+    padding: "20px 16px",
+    borderBottom: "1px solid #f1f5f9",
+    color: "#334155",
+    fontSize: "14px",
   },
   roleBadge: {
-    padding: "4px 12px",
-    borderRadius: "4px",
-    fontSize: "12px",
-    fontWeight: "bold",
-    display: "inline-block",
-  },
-  roleKetua: {
-    backgroundColor: "#e3f2fd",
-    color: "#1976d2",
-  },
-  roleBendahara: {
-    backgroundColor: "#f3e5f5",
-    color: "#7b1fa2",
-  },
-  roleSekretaris: {
-    backgroundColor: "#ede7f6",
-    color: "#512da8",
-  },
-  roleAnggota: {
-    backgroundColor: "#e8f5e9",
-    color: "#388e3c",
-  },
-  actionButton: {
     padding: "6px 12px",
-    margin: "0 5px",
+    borderRadius: "8px",
+    fontSize: "11px",
+    fontWeight: "700",
+    display: "inline-block",
+    letterSpacing: "0.025em",
+  },
+  roleKetua: { backgroundColor: "#fef3c7", color: "#92400e" },
+  roleBendahara: { backgroundColor: "#dcfce7", color: "#166534" },
+  roleSekretaris: { backgroundColor: "#e0e7ff", color: "#3730a3" },
+  roleAnggota: { backgroundColor: "#f1f5f9", color: "#475569" },
+  deleteButton: {
+    padding: "6px 14px",
+    backgroundColor: "#fee2e2",
+    color: "#b91c1c",
     border: "none",
-    borderRadius: "4px",
+    borderRadius: "8px",
     cursor: "pointer",
     fontSize: "12px",
-    fontWeight: "bold",
-  },
-  deleteButton: {
-    backgroundColor: "#f44336",
-    color: "white",
-  },
-  error: {
-    backgroundColor: "#ffebee",
-    color: "#c62828",
-    padding: "12px",
-    borderRadius: "4px",
-    marginBottom: "20px",
-  },
-  success: {
-    backgroundColor: "#e8f5e9",
-    color: "#2e7d32",
-    padding: "12px",
-    borderRadius: "4px",
-    marginBottom: "20px",
+    fontWeight: "600",
   },
 };
 
 function AdminPanel({ user }) {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(null);
-  const [showForm, setShowForm] = useState(false);
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-    full_name: "",
-    role: "anggota",
-  });
+  const [searchName, setSearchName] = useState("");
+  const [filterRole, setFilterRole] = useState("all");
 
-  useEffect(() => {
-    loadUsers();
-  }, []);
+  useEffect(() => { loadUsers(); }, []);
 
   const loadUsers = async () => {
     try {
       setLoading(true);
       const data = await userAPI.getAllUsers();
       setUsers(data);
-      setError(null);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      if (!formData.email || !formData.password || !formData.full_name) {
-        setError("All fields are required");
-        return;
-      }
-
-      await userAPI.createUser(
-        formData.email,
-        formData.password,
-        formData.full_name,
-        formData.role,
-      );
-
-      setFormData({
-        email: "",
-        password: "",
-        full_name: "",
-        role: "anggota",
-      });
-      setShowForm(false);
-      setSuccess("User created successfully");
-      setTimeout(() => setSuccess(null), 3000);
-      loadUsers();
-    } catch (err) {
-      setError(err.message);
-    }
+    } catch (err) { console.error(err); } 
+    finally { setLoading(false); }
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm("Are you sure you want to delete this user?")) {
+    if (window.confirm("Hapus user?")) {
       try {
         await userAPI.deleteUser(id);
-        setSuccess("User deleted successfully");
-        setTimeout(() => setSuccess(null), 3000);
         loadUsers();
-      } catch (err) {
-        setError(err.message);
-      }
+      } catch (err) { alert(err.message); }
     }
   };
 
-  const getRoleBadgeStyle = (role) => {
-    switch (role) {
-      case "ketua":
-        return styles.roleKetua;
-      case "bendahara":
-        return styles.roleBendahara;
-      case "sekretaris":
-        return styles.roleSekretaris;
-      case "anggota":
-        return styles.roleAnggota;
-      default:
-        return {};
+  const getRoleStyle = (role) => {
+    switch (role?.toLowerCase()) {
+      case "ketua": return styles.roleKetua;
+      case "bendahara": return styles.roleBendahara;
+      case "sekretaris": return styles.roleSekretaris;
+      default: return styles.roleAnggota;
     }
   };
+
+  // LOGIKA DUAL FILTER: Nama DAN Role
+  const filteredUsers = users.filter((u) => {
+    const nameMatch = u.full_name.toLowerCase().includes(searchName.toLowerCase());
+    const roleMatch = filterRole === "all" || u.role.toLowerCase() === filterRole.toLowerCase();
+    return nameMatch && roleMatch; // Harus kena dua-duanya
+  });
 
   return (
     <div style={styles.container}>
       <div style={styles.header}>
-        <h2 style={styles.title}>Admin Panel - User Management</h2>
-        <button style={styles.button} onClick={() => setShowForm(!showForm)}>
-          {showForm ? "Cancel" : "Create User"}
-        </button>
+        <h2 style={styles.title}>User Management</h2>
+        <button style={styles.button}>+ Create User</button>
       </div>
 
-      {error && <div style={styles.error}>{error}</div>}
-      {success && <div style={styles.success}>{success}</div>}
-
-      {showForm && (
-        <form
-          style={{ ...styles.form, ...styles.formActive }}
-          onSubmit={handleSubmit}
+      {/* FILTER BAR - SEKARANG JELAS & TERANG */}
+      <div style={styles.filterBar}>
+        <input 
+          type="text" 
+          placeholder="Cari berdasarkan nama..." 
+          style={styles.filterInput}
+          value={searchName}
+          onChange={(e) => setSearchName(e.target.value)}
+        />
+        <select 
+          style={styles.filterSelect}
+          value={filterRole}
+          onChange={(e) => setFilterRole(e.target.value)}
         >
-          <div style={styles.formGroup}>
-            <label style={styles.label}>Email</label>
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              style={styles.input}
-              required
-            />
-          </div>
-
-          <div style={styles.formGroup}>
-            <label style={styles.label}>Password</label>
-            <input
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              style={styles.input}
-              required
-              placeholder="Min 8 chars, 1 uppercase, 1 lowercase, 1 digit"
-            />
-          </div>
-
-          <div style={styles.formGroup}>
-            <label style={styles.label}>Full Name</label>
-            <input
-              type="text"
-              name="full_name"
-              value={formData.full_name}
-              onChange={handleChange}
-              style={styles.input}
-              required
-            />
-          </div>
-
-          <div style={styles.formGroup}>
-            <label style={styles.label}>Role</label>
-            <select
-              name="role"
-              value={formData.role}
-              onChange={handleChange}
-              style={styles.select}
-            >
-              <option value="anggota">Anggota</option>
-              <option value="bendahara">Bendahara</option>
-              <option value="sekretaris">Sekretaris</option>
-            </select>
-          </div>
-
-          <button type="submit" style={styles.submitButton}>
-            Create User
-          </button>
-          <button
-            type="button"
-            style={styles.cancelButton}
-            onClick={() => setShowForm(false)}
+          <option value="all">Semua Jabatan</option>
+          <option value="ketua">Ketua</option>
+          <option value="bendahara">Bendahara</option>
+          <option value="sekretaris">Sekretaris</option>
+          <option value="anggota">Anggota</option>
+        </select>
+        
+        {(searchName !== "" || filterRole !== "all") && (
+          <button 
+            style={styles.resetButton} 
+            onClick={() => {setSearchName(""); setFilterRole("all");}}
           >
-            Cancel
+            Reset
           </button>
-        </form>
-      )}
+        )}
 
-      {loading ? (
-        <div>Loading...</div>
-      ) : (
-        <table style={styles.table}>
-          <thead>
-            <tr>
-              <th style={styles.th}>Email</th>
-              <th style={styles.th}>Full Name</th>
-              <th style={styles.th}>Role</th>
-              <th style={styles.th}>Created At</th>
-              <th style={styles.th}>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {users.map((u) => (
-              <tr key={u.id}>
-                <td style={styles.td}>{u.email}</td>
-                <td style={styles.td}>{u.full_name}</td>
-                <td style={styles.td}>
-                  <div
-                    style={{
-                      ...styles.roleBadge,
-                      ...getRoleBadgeStyle(u.role),
-                    }}
-                  >
-                    {u.role.toUpperCase()}
-                  </div>
-                </td>
-                <td style={styles.td}>{formatDate(u.created_at)}</td>
-                <td style={styles.td}>
-                  {u.id !== user.id && u.role !== "ketua" && (
-                    <button
-                      style={{ ...styles.actionButton, ...styles.deleteButton }}
-                      onClick={() => handleDelete(u.id)}
-                    >
-                      Delete
-                    </button>
-                  )}
-                  {u.role === "ketua" && (
-                    <span style={{ fontSize: "12px", color: "#999" }}>
-                      Protected
-                    </span>
-                  )}
-                </td>
+        <div style={{ marginLeft: "auto", color: "#64748b", fontSize: "14px", fontWeight: "500" }}>
+          {filteredUsers.length} Anggota ditemukan
+        </div>
+      </div>
+
+      <div style={styles.tableCard}>
+        {loading ? (
+          <div style={{ padding: "40px", textAlign: "center" }}>Loading...</div>
+        ) : (
+          <table style={styles.table}>
+            <thead>
+              <tr>
+                <th style={styles.th}>Email</th>
+                <th style={styles.th}>Full Name</th>
+                <th style={styles.th}>Role</th>
+                <th style={styles.th}>Created At</th>
+                <th style={{ ...styles.th, textAlign: "right" }}>Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
+            </thead>
+            <tbody>
+              {filteredUsers.map((u) => (
+                <tr key={u.id}>
+                  <td style={styles.td}>{u.email}</td>
+                  <td style={{ ...styles.td, fontWeight: "600", color: "#1e293b" }}>{u.full_name}</td>
+                  <td style={styles.td}>
+                    <div style={{ ...styles.roleBadge, ...getRoleStyle(u.role) }}>
+                      {u.role.toUpperCase()}
+                    </div>
+                  </td>
+                  <td style={styles.td}>{formatDate(u.created_at)}</td>
+                  <td style={{ ...styles.td, textAlign: "right" }}>
+                    {u.role !== "ketua" ? (
+                      <button style={styles.deleteButton} onClick={() => handleDelete(u.id)}>Delete</button>
+                    ) : (
+                      <span style={{ fontSize: "12px", color: "#cbd5e1", fontStyle: "italic" }}>Protected</span>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
     </div>
   );
 }
