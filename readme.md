@@ -433,6 +433,8 @@ http://localhost:8000/letters/6
 ```
 
 **Response Body** <p>
+```
 {
     "detail": "Letter not found"
 }
+```
