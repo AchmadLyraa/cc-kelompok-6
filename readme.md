@@ -107,7 +107,7 @@ Berikut adalah roadmap untuk menunjukkan progres dan milestone proyek kami:
 
 ## Struktur Proyek 
 
-Berikut adalah struktur proyek untuk aplikasi Sistem Informasi Keuangan dan Administrasi HMSI (SIKASI). Proyek ini memiliki dua komponen utama, yaitu frontend dan backend yang bekerja secara terpisah namun saling terhubung melalui API. Semua file yang terkait dengan pengembangan aplikasi ini terorganisir dengan rapi di dalam folder-folder yang sesuai. Struktur berikut mencerminkan pembagian tanggung jawab antar tim dalam proyek, serta memudahkan pengelolaan, pengembangan, dan deployment aplikasi.
+Berikut adalah struktur proyek untuk aplikasi Sistem Informasi Keuangan dan Administrasi HMSI (SIKASI).
 
 ```
 cc-kelompok-6/
@@ -141,14 +141,6 @@ cc-kelompok-6/
 ├── .gitignore                   # File untuk mengabaikan file tertentu dalam Git
 ├── README.md                    # Dokumentasi utama proyek
 ```
-
-### Penjelasan Struktur Proyek:
-- Backend: Folder ini berisi kode sumber untuk backend yang menggunakan FastAPI. Terdapat berbagai file seperti main.py yang menjadi entry point, requirements.txt untuk mengelola dependencies, dan folder models serta services untuk logika dan pengolahan data.
-- Frontend: Folder ini berisi kode untuk tampilan aplikasi yang dibangun menggunakan React. Semua komponen, styling, dan logika tampilan berada di dalam folder src. package.json digunakan untuk mengelola dependensi frontend, dan vite.config.js adalah konfigurasi untuk build aplikasi.
-- Docs: Folder ini berisi dokumentasi anggota tim dan deskripsi tentang proyek, termasuk README.md yang menjelaskan keseluruhan aplikasi serta langkah-langkah pengembangan dan penggunaan.
-- .gitignore: Menentukan file-file yang tidak perlu dipantau oleh Git, seperti file konfigurasi lokal atau file build.
-
-Ini adalah gambaran umum dari struktur proyek yang dapat membantu dalam memahami pengorganisasian dan alur kerja proyek SIKASI.
 
 ## Deployment
 
