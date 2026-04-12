@@ -172,3 +172,267 @@ Database akan digunakan untuk menyimpan:
 - Data pengurus HMSI
 
 Semua layanan ini nantinya akan dideploy secara terintegrasi di cloud.
+
+
+---
+
+## 📡 API Documentation
+
+### 1️⃣ POST /letters
+Endpoint ini digunakan untuk menambahkan item baru ke dalam sistem inventory.<p>
+**Method** <br>
+```
+POST
+```
+**URL**
+```
+http://localhost:8000/letters
+```
+**Request Body** <p>
+Item 1 : 
+```
+{
+    "title": "keluar",
+    "letter_type": "Leave Request",
+    "content": gapapa"
+}
+```
+Item 2 : 
+```
+{
+    "title": "gak sesuai",
+    "letter_type": "Complaint",
+    "content": berbeda aja"
+}
+```
+Item 3 : 
+```
+{
+    "title": "surat izin",
+    "letter_type": "Other",
+    "content": ada acara"
+}
+```
+
+**Response Body** <p>
+Item 1 :
+```
+{
+    "content": "gapapa"
+    "id": 4,
+    "created_at": "2026-04-11T13:58:01.703590",
+    "letter_type": "Leave Request",
+    "status": "draft",
+    "title": "keluar",
+    "update_at": "2026-04-11T13:58:01.703590"
+}
+```
+
+Item 2 :
+```
+{
+    "content": "berbeda aja"
+    "id": 5,
+    "created_at": "2026-04-11T14:58:01.818530",
+    "letter_type": "Complaint",
+    "status": "draft",
+    "title": "ga sesuai",
+    "update_at": "2026-04-11T14:58:01.818530"
+}
+```
+
+Item 3 :
+```
+{
+    "content": "ada acara"
+    "id": 6,
+    "created_at": "2026-04-11T14:01:30.467232",
+    "letter_type": "Other",
+    "status": "draft",
+    "title": "surat izin",
+    "update_at": "2026-04-11T14:01:30.467232"
+}
+```
+
+
+### 2️⃣ GET /letters
+Endpoint ini digunakan untuk mengambil seluruh daftar item yang tersimpan di dalam sistem inventory. Biasanya digunakan ketika pengguna ingin melihat semua item yang tersedia di database.<p>
+
+**Method** <br>
+```
+GET
+```
+**URL**
+```
+http://localhost:8000/letters?skip=0&limit=3
+```
+**Request Body** <p>
+Endpoint ini tidak memerlukan request body karena hanya digunakan untuk mengambil daftar item.
+
+**Response Body** <p>
+```
+[
+    {
+        "content": "gapapa"
+        "id": 4,
+        "created_at": "2026-04-11T13:58:01.703590",
+        "letter_type": "Leave Request",
+        "status": "draft",
+        "title": "keluar",
+        "update_at": "2026-04-11T13:58:01.703590"
+    },
+    {
+        "content": "berbeda aja"
+        "id": 5,
+        "created_at": "2026-04-11T14:58:01.818530",
+        "letter_type": "Complaint",
+        "status": "draft",
+        "title": "ga sesuai",
+        "update_at": "2026-04-11T14:58:01.818530"
+    },
+    {
+        "content": "ada acara"
+        "id": 6,
+        "created_at": "2026-04-11T14:01:30.467232",
+        "letter_type": "Other",
+        "status": "draft",
+        "title": "surat izin",
+        "update_at": "2026-04-11T14:01:30.467232"
+    }
+]
+```
+
+### 3️⃣ GET /letters/{letter_id}
+Endpoint ini digunakan untuk mengambil data satu item tertentu berdasarkan ID dan biasanya digunakan ketika pengguna ingin melihat detail dari satu item secara spesifik.
+
+**Method** <br>
+```
+GET 
+```
+**URL**
+```
+http://localhost:8000/letters/6
+```
+**Request Body** <p>
+Endpoint ini tidak memerlukan request body karena hanya digunakan untuk mengambil daftar item.
+
+**Response Body** <p>
+```
+{
+    "content": "ada acara"
+    "id": 6,
+    "created_at": "2026-04-11T14:01:30.467232",
+    "letter_type": "Other",
+    "status": "draft",
+    "title": "surat izin",
+    "update_at": "2026-04-11T14:01:30.467232"
+}
+```
+
+### 4️⃣ PUT /letter/{letter_id}
+Endpoint ini digunakan untuk memperbarui data item yang sudah ada di dalam sistem inventory berdasarkan ID item. <p>
+
+**Method** <br>
+```
+PUT 
+```
+**URL**
+```
+http://localhost:8000/letters/6
+```
+**Request Body** <p>
+```
+{
+    "title": "surat izin",
+    "letter_type": "Other",
+    "content": ada acara di luar kota"
+}
+```
+
+**Response Body** <p>
+```
+{
+    "content": "ada acara di luar kota"
+    "id": 6,
+    "created_at": "2026-04-11T14:01:30.467232",
+    "letter_type": "Other",
+    "status": "draft",
+    "title": "surat izin",
+    "update_at": "2026-04-11T14:16:18.743361"
+}
+```
+
+### 5️⃣ GET /letters/{letter_id}
+Endpoint ini kembali dijalankan untuk mengambil data satu item tertentu berdasarkan ID dan melihat perubahan data yang telah diubah.
+
+**Method** <br>
+```
+GET 
+```
+**URL**
+```
+http://localhost:8000/letters/6
+```
+**Request Body** <p>
+```
+{
+    "content": "ada acara di luar kota"
+    "id": 6,
+    "created_at": "2026-04-11T14:01:30.467232",
+    "letter_type": "Other",
+    "status": "draft",
+    "title": "surat izin",
+    "update_at": "2026-04-11T14:16:18.743361"
+}
+```
+
+### 6️⃣ DELETE /letters/{letter_id}
+Endpoint ini digunakan untuk menghapus item tertentu dari sistem inventory berdasarkan ID.
+Ketika endpoint ini dipanggil, sistem akan mencari item yang memiliki ID sesuai dan kemudian menghapusnya dari database.
+
+**Method** <br>
+```
+DELETE 
+```
+**URL**
+```
+http://localhost:8000/letters/6
+```
+**Request Body** <p>
+Endpoint ini tidak memerlukan request body karena hanya membutuhkan ID item pada URL.
+
+**Response Body** <p>
+```
+{
+    "detail": "Letter deleted"
+}
+```
+
+### 7️⃣ GET /letters/{letter_id}
+Endpoint ini kembali dijalankan untuk mengambil data satu item tertentu berdasarkan ID dan melihat response data yang telah dihapus dengan menampilkan 404 Not Found.
+
+**Method** <br>
+```
+GET 
+```
+**URL**
+```
+http://localhost:8000/letters/6
+```
+**Request Body** <p>
+```
+{
+    "content": "ada acara di luar kota"
+    "id": 6,
+    "created_at": "2026-04-11T14:01:30.467232",
+    "letter_type": "Other",
+    "status": "draft",
+    "title": "surat izin",
+    "update_at": "2026-04-11T14:16:18.743361"
+}
+```
+
+**Response Body** <p>
+{
+    "detail": "Letter not found"
+}
