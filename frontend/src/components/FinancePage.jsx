@@ -112,16 +112,19 @@ const styles = {
     backgroundColor: "#f44336",
     color: "white",
   },
-  toast: {
-    position: "fixed",
-    top: "20px",
-    right: "20px",
-    padding: "12px 20px",
-    borderRadius: "6px",
-    color: "white",
-    fontWeight: "bold",
-    zIndex: 9999,
-    boxShadow: "0 2px 6px rgba(0,0,0,0.2)",
+  error: {
+    backgroundColor: "#ffebee",
+    color: "#c62828",
+    padding: "12px",
+    borderRadius: "4px",
+    marginBottom: "20px",
+  },
+  success: {
+    backgroundColor: "#e8f5e9",
+    color: "#2e7d32",
+    padding: "12px",
+    borderRadius: "4px",
+    marginBottom: "20px",
   },
 };
 
@@ -133,10 +136,10 @@ function FinancePage({ user }) {
     balance: 0,
   });
   const [loading, setLoading] = useState(true);
-
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
-
   const [formData, setFormData] = useState({
     type: "income",
     category: "",
@@ -144,15 +147,7 @@ function FinancePage({ user }) {
     description: "",
   });
 
-  const [toast, setToast] = useState(null);
-
-  const showToast = (message, type) => {
-    setToast({ message, type });
-    setTimeout(() => setToast(null), 3000);
-  };
-
-  const canCreate =
-    user && (user.role === "bendahara" || user.role === "ketua");
+  const canCreate = user.role === "bendahara" || user.role === "ketua";
 
   useEffect(() => {
     loadTransactions();
@@ -165,8 +160,9 @@ function FinancePage({ user }) {
       const summaryData = await financeAPI.getSummary();
       setTransactions(transData);
       setSummary(summaryData);
+      setError(null);
     } catch (err) {
-      showToast(err.message, "error");
+      setError(err.message);
     } finally {
       setLoading(false);
     }
@@ -182,31 +178,30 @@ function FinancePage({ user }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
       if (!formData.category || !formData.amount || !formData.description) {
-        showToast("All fields are required", "error");
+        setError("All fields are required");
         return;
       }
 
       if (editingId) {
+        // Edit mode
         await financeAPI.updateTransaction(editingId, {
           type: formData.type,
           category: formData.category,
           amount: parseFloat(formData.amount),
           description: formData.description,
         });
-
-        showToast("Transaction updated successfully", "success");
+        setSuccess("Transaction updated successfully");
       } else {
+        // Create mode
         await financeAPI.createTransaction(
           formData.type,
           formData.category,
           parseFloat(formData.amount),
-          formData.description
+          formData.description,
         );
-
-        showToast("Transaction added successfully", "success");
+        setSuccess("Transaction added successfully");
       }
 
       setFormData({
@@ -215,12 +210,12 @@ function FinancePage({ user }) {
         amount: "",
         description: "",
       });
-
       setShowForm(false);
       setEditingId(null);
+      setTimeout(() => setSuccess(null), 3000);
       loadTransactions();
     } catch (err) {
-      showToast(err.message, "error");
+      setError(err.message);
     }
   };
 
@@ -233,34 +228,24 @@ function FinancePage({ user }) {
       description: transaction.description,
     });
     setShowForm(true);
+    setError(null);
   };
 
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this transaction?")) {
       try {
         await financeAPI.deleteTransaction(id);
-        showToast("Transaction deleted successfully", "success");
+        setSuccess("Transaction deleted successfully");
+        setTimeout(() => setSuccess(null), 3000);
         loadTransactions();
       } catch (err) {
-        showToast(err.message, "error");
+        setError(err.message);
       }
     }
   };
 
   return (
     <div style={styles.container}>
-      {toast && (
-        <div
-          style={{
-            ...styles.toast,
-            backgroundColor:
-              toast.type === "success" ? "#4CAF50" : "#f44336",
-          }}
-        >
-          {toast.message}
-        </div>
-      )}
-
       <div style={styles.header}>
         <h2 style={styles.title}>Finance Management</h2>
         {canCreate && (
@@ -270,8 +255,54 @@ function FinancePage({ user }) {
         )}
       </div>
 
-      <div style={{ marginBottom: "20px" }}>
-        Balance: ${(summary.balance || 0).toFixed(2)}
+      {error && <div style={styles.error}>{error}</div>}
+      {success && <div style={styles.success}>{success}</div>}
+
+      <div
+        style={{
+          display: "flex",
+          gap: "30px",
+          marginBottom: "30px",
+          padding: "20px",
+          backgroundColor: "#f0f7ff",
+          borderRadius: "8px",
+          borderLeft: "4px solid #2196F3",
+        }}
+      >
+        <div>
+          <div style={{ fontSize: "12px", color: "#666", marginBottom: "5px" }}>
+            Total Income
+          </div>
+          <div
+            style={{ fontSize: "24px", fontWeight: "bold", color: "#4CAF50" }}
+          >
+            ${summary.total_income.toFixed(2)}
+          </div>
+        </div>
+        <div>
+          <div style={{ fontSize: "12px", color: "#666", marginBottom: "5px" }}>
+            Total Expense
+          </div>
+          <div
+            style={{ fontSize: "24px", fontWeight: "bold", color: "#f44336" }}
+          >
+            ${summary.total_expense.toFixed(2)}
+          </div>
+        </div>
+        <div style={{ borderLeft: "2px solid #ddd", paddingLeft: "30px" }}>
+          <div style={{ fontSize: "12px", color: "#666", marginBottom: "5px" }}>
+            Balance
+          </div>
+          <div
+            style={{
+              fontSize: "24px",
+              fontWeight: "bold",
+              color: summary.balance >= 0 ? "#4CAF50" : "#f44336",
+            }}
+          >
+            ${summary.balance.toFixed(2)}
+          </div>
+        </div>
       </div>
 
       {canCreate && showForm && (
@@ -279,26 +310,149 @@ function FinancePage({ user }) {
           style={{ ...styles.form, ...styles.formActive }}
           onSubmit={handleSubmit}
         >
-          <input name="category" onChange={handleChange} placeholder="Category" />
-          <input name="amount" onChange={handleChange} placeholder="Amount" />
-          <input name="description" onChange={handleChange} placeholder="Description" />
-          <button type="submit">Submit</button>
+          <div style={styles.formGroup}>
+            <label style={styles.label}>Type</label>
+            <select
+              name="type"
+              value={formData.type}
+              onChange={handleChange}
+              style={styles.select}
+            >
+              <option value="income">Income</option>
+              <option value="expense">Expense</option>
+            </select>
+          </div>
+
+          <div style={styles.formGroup}>
+            <label style={styles.label}>Category</label>
+            <select
+              name="category"
+              value={formData.category}
+              onChange={handleChange}
+              style={styles.select}
+              required
+            >
+              <option value="">Select Category</option>
+              <option value="Salary">Salary</option>
+              <option value="Food">Food</option>
+              <option value="Transport">Transport</option>
+              <option value="Utilities">Utilities</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          <div style={styles.formGroup}>
+            <label style={styles.label}>Amount</label>
+            <input
+              type="number"
+              name="amount"
+              value={formData.amount}
+              onChange={handleChange}
+              style={styles.input}
+              required
+              step="0.01"
+              min="0"
+            />
+          </div>
+
+          <div style={styles.formGroup}>
+            <label style={styles.label}>Description</label>
+            <input
+              type="text"
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              style={styles.input}
+              required
+            />
+          </div>
+
+          <button type="submit" style={styles.submitButton}>
+            {editingId ? "Update Transaction" : "Add Transaction"}
+          </button>
+          {editingId && (
+            <button
+              type="button"
+              style={styles.cancelButton}
+              onClick={() => {
+                setEditingId(null);
+                setShowForm(false);
+                setFormData({
+                  type: "income",
+                  category: "",
+                  amount: "",
+                  description: "",
+                });
+              }}
+            >
+              Cancel Edit
+            </button>
+          )}
+          <button
+            type="button"
+            style={styles.cancelButton}
+            onClick={() => setShowForm(false)}
+          >
+            Cancel
+          </button>
         </form>
       )}
 
       {loading ? (
-        <p>Loading...</p>
+        <div>Loading...</div>
       ) : (
         <table style={styles.table}>
+          <thead>
+            <tr>
+              <th style={styles.th}>Type</th>
+              <th style={styles.th}>Category</th>
+              <th style={styles.th}>Amount</th>
+              <th style={styles.th}>Description</th>
+              <th style={styles.th}>Date</th>
+              {canCreate && <th style={styles.th}>Actions</th>}
+            </tr>
+          </thead>
           <tbody>
-            {transactions.map((t) => (
-              <tr key={t.id}>
-                <td style={styles.td}>{t.category}</td>
-                <td style={styles.td}>${t.amount}</td>
-                <td>
-                  <button onClick={() => handleEditTransaction(t)}>Edit</button>
-                  <button onClick={() => handleDelete(t.id)}>Delete</button>
+            {transactions.map((transaction) => (
+              <tr key={transaction.id}>
+                <td style={styles.td}>
+                  <span
+                    style={{
+                      color:
+                        transaction.type === "income" ? "#4CAF50" : "#f44336",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    {transaction.type === "income" ? "+" : "-"}{" "}
+                    {transaction.type}
+                  </span>
                 </td>
+                <td style={styles.td}>{transaction.category}</td>
+                <td style={styles.td}>${transaction.amount.toFixed(2)}</td>
+                <td style={styles.td}>{transaction.description}</td>
+                <td style={styles.td}>
+                  {new Date(transaction.created_at).toLocaleDateString()}
+                </td>
+                {canCreate && (
+                  <td style={styles.td}>
+                    <button
+                      style={{
+                        ...styles.actionButton,
+                        backgroundColor: "#FF9800",
+                        color: "white",
+                      }}
+                      onClick={() => handleEditTransaction(transaction)}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      style={{ ...styles.actionButton, ...styles.deleteButton }}
+                      onClick={() => handleDelete(transaction.id)}
+                    >
+                      Delete
+                    </button>
+                  </td>
+                )}
               </tr>
             ))}
           </tbody>
