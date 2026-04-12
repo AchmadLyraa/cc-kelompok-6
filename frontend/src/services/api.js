@@ -66,7 +66,7 @@ async function apiCall(
       let errorMsg = `HTTP ${response.status}`;
       try {
         const errorData = await response.json();
-        console.log("[v0] Backend error response:", errorData);
+        console.log("Backend error response:", errorData);
 
         // Handle FastAPI validation errors (422)
         if (errorData.detail) {
@@ -80,17 +80,26 @@ async function apiCall(
           }
         }
       } catch (parseErr) {
-        console.log("[v0] Could not parse error response");
+        console.log("ould not parse error response");
       }
       throw new Error(errorMsg);
     }
 
     return await response.json();
   } catch (error) {
-    console.log("[v0] API error:", error.message);
+    console.log("API error:", error.message);
     throw error;
   }
 }
+
+export const checkAPIConnection = async () => {
+  try {
+    const response = await fetch(`${API_URL}/health`, { method: "GET" });
+    return response.ok;
+  } catch {
+    return false;
+  }
+};
 
 export const authAPI = {
   register: (email, password, fullName) =>
